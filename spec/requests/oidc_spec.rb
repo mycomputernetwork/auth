@@ -84,7 +84,7 @@ RSpec.describe "The OIDC provider" do
       code_challenge: challenge, code_challenge_method: "S256"
     }
 
-    expect(response).to redirect_to("/dev/sign_in")
+    expect(response).to redirect_to("/sign_in")
   end
 
   it "issues a JWT access token and an ID token for a PKCE exchange" do
