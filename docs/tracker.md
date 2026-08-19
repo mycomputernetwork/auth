@@ -74,7 +74,7 @@ Run `bin/rails server -p 3001`, then:
 ## Operations
 
 Day-to-day administration — allowing, revoking, inspecting sessions, reading a
-failed logout — is [`docs/operations.md`](operations.md).
+failed logout — is [`docs/handbook.md`](handbook.md).
 
 ```ruby
 AllowedEmail.create!(email: "someone@example.com")   # grant

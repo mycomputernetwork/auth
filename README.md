@@ -26,7 +26,7 @@ mise run test
 ```
 
 Integrating another app: [`docs/clients.md`](docs/clients.md).
-Allowing and revoking people: [`docs/operations.md`](docs/operations.md).
+Allowing and revoking people: [`docs/handbook.md`](docs/handbook.md).
 
 Design decisions live in
 [ADR 0003](https://github.com/mycomputernetwork/noted/blob/main/docs/ADR/0003-centralized-auth-service.md);

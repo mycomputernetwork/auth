@@ -11,8 +11,8 @@ Node. Runs on port 3001, deployed to `~/services/auth`, served at
 1. `docs/tracker.md` — milestone status, what to click, what is unexercised.
 2. `docs/clients.md` — the contract downstream apps integrate against:
    registration, endpoints, token shapes, back-channel logout.
-3. `docs/operations.md` — allowing, revoking, looking around, and what the
-   common sign-in failures mean.
+3. `docs/handbook.md` — running it: allowing, revoking, looking around, and
+   what the common sign-in failures mean.
 4. [ADR 0003 in noted](https://github.com/mycomputernetwork/noted/blob/main/docs/ADR/0003-centralized-auth-service.md)
    — why this service exists and what shape it takes. Decisions live there.
 
@@ -48,7 +48,7 @@ anything but the Google callback itself.
 
 - Slim by intent. No admin UI, no consent screen, no user profiles, no dynamic
   client registration. Allowlisting, revocation and client registration are
-  `bin/rails runner` and rake tasks — see `docs/operations.md`.
+  `bin/rails runner` and rake tasks — see `docs/handbook.md`.
 - Let libraries do the work: Doorkeeper for the protocol, omniauth for Google,
   the `jwt` gem for signing. Reach for a hand-rolled flow only when a gem's
   dependency footprint is worse than the code it saves.
