@@ -40,8 +40,12 @@ integer keys the gem ships with; only `resource_owner_id` is a string.
 - The revoked and non-allowlisted paths against *Google* rather than the dev
   picker. The happy path has been walked with real credentials.
 - Deployment. No Capistrano config, no Pangolin resource, no launchd label.
-- A real downstream app. Logout deliveries are asserted against stubbed HTTP;
-  nothing has yet verified an auth-issued token or consumed a logout token.
+- Nothing outstanding in the handshake itself: noted has verified an
+  auth-issued token, and a real back-channel logout was delivered end to end
+  (`delivered`, HTTP 200) on 19 Aug.
+- RP-initiated logout. Signing out of a *client* ends only that client's
+  session; auth's own session survives, so the next sign-in is silent. Closing
+  it means an `end_session_endpoint` here and a redirect there.
 - Delivery is synchronous and unretried: a slow app blocks the logout request
   for up to 5 seconds, and a failed delivery is recorded but never retried.
 - The issuer is fixed per environment while Doorkeeper derives endpoint URLs
