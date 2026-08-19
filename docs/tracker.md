@@ -31,6 +31,10 @@ cannot drift from this one unnoticed.
 | M4 golden fixtures for downstream apps | next |
 | Deploy to `~/services/auth` | not started |
 
+Ids are UUIDs across auth's own tables, so a `sub` can never collide with a
+value a downstream app guessed or seeded. Doorkeeper's own tables keep the
+integer keys the gem ships with; only `resource_owner_id` is a string.
+
 ## Unexercised
 
 - The revoked and non-allowlisted paths against *Google* rather than the dev
@@ -62,7 +66,7 @@ Run `bin/rails server -p 3001`, then:
 7. `/.well-known/openid-configuration` and `/oauth/discovery/keys` both
    return JSON; the JWKS carries only `kty/use/alg/kid/n/e`.
 8. Signed out, hitting `/oauth/authorize?client_id=noted-development&…`
-   redirects to `/dev/sign_in`; after picking a user it redirects back to the
+   redirects to `/sign_in`, which offers Google and the dev picker; after picking a user it redirects back to the
    client's `redirect_uri` with a `code`.
 9. After that, sign out and check `LogoutDelivery.last` — with no app running
    at :3000 it records `failed`, and the sign-out still completes.

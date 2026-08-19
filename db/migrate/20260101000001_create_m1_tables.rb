@@ -1,6 +1,6 @@
 class CreateM1Tables < ActiveRecord::Migration[8.1]
   def change
-    create_table :users do |t|
+    create_table :users, id: :string do |t|
       t.string :google_sub
       t.string :email, null: false
       t.string :name
@@ -10,8 +10,8 @@ class CreateM1Tables < ActiveRecord::Migration[8.1]
     add_index :users, :google_sub, unique: true
     add_index :users, :email, unique: true
 
-    create_table :sessions do |t|
-      t.references :user, null: false, foreign_key: true
+    create_table :sessions, id: :string do |t|
+      t.references :user, null: false, type: :string, foreign_key: true
       t.string :sid, null: false
       t.string :user_agent
       t.string :ip_address
@@ -20,7 +20,7 @@ class CreateM1Tables < ActiveRecord::Migration[8.1]
     end
     add_index :sessions, :sid, unique: true
 
-    create_table :allowed_emails do |t|
+    create_table :allowed_emails, id: :string do |t|
       t.string :email, null: false
       t.timestamps
     end

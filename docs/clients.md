@@ -61,7 +61,7 @@ Access token, RS256, 15 minutes:
 ID token, RS256, same `sub` and `sid`, plus `email`, `email_verified`,
 `name`, `nonce`, `auth_time`.
 
-`sub` is auth's own user id, never Google's — a re-linked Google account does
+`sub` is auth's own user id — a UUID, never Google's subject — a re-linked Google account does
 not change the identity you have stored. `sid` identifies the auth session
 behind the token; store it on your session row, because that is what a logout
 arrives carrying.

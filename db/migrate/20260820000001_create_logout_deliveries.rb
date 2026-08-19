@@ -1,6 +1,6 @@
 class CreateLogoutDeliveries < ActiveRecord::Migration[8.1]
   def change
-    create_table :logout_deliveries do |t|
+    create_table :logout_deliveries, id: :string do |t|
       t.references :application, null: false, foreign_key: { to_table: :oauth_applications }
       t.string :sid, null: false
       t.string :status, null: false

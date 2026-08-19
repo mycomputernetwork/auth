@@ -17,7 +17,7 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[8.1]
     add_index :oauth_applications, :uid, unique: true
 
     create_table :oauth_access_grants do |t|
-      t.references :resource_owner,  null: false
+      t.references :resource_owner,  null: false, type: :string
       t.references :application,     null: false
       t.string   :token,             null: false
       t.integer  :expires_in,        null: false
@@ -38,7 +38,7 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[8.1]
     )
 
     create_table :oauth_access_tokens do |t|
-      t.references :resource_owner, index: true
+      t.references :resource_owner, index: true, type: :string
 
       t.references :application,    null: false
 

@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include UuidPrimaryKey
+
   has_many :sessions, dependent: :destroy
 
   normalizes :email, with: ->(email) { email.strip.downcase }

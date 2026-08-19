@@ -1,4 +1,6 @@
 class Session < ApplicationRecord
+  include UuidPrimaryKey
+
   belongs_to :user
 
   has_secure_token :sid, length: 32
