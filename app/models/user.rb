@@ -14,6 +14,8 @@ class User < ApplicationRecord
     return nil unless AllowedEmail.allows?(email)
 
     user = find_by(google_sub: auth.uid) || find_or_initialize_by(email: email)
+    return user if user.revoked?
+
     user.assign_attributes(google_sub: auth.uid, email: email, name: auth.info.name)
     user.save!
     user

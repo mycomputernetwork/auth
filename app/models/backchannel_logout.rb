@@ -1,3 +1,5 @@
+require "ipaddr"
+
 class BackchannelLogout
   TIMEOUT = 5
 
@@ -37,6 +39,8 @@ class BackchannelLogout
 
   def post(uri, token)
     uri = URI(uri)
+    raise "untrusted logout URI" unless deliverable?(uri)
+
     request = Net::HTTP::Post.new(uri)
     request.set_form_data(logout_token: token)
 
@@ -45,6 +49,18 @@ class BackchannelLogout
                     open_timeout: TIMEOUT, read_timeout: TIMEOUT) do |http|
       http.request(request)
     end
+  end
+
+  def deliverable?(uri)
+    return false unless uri.is_a?(URI::HTTP)
+
+    host = uri.host.to_s.downcase
+    return false if host.empty? || host == "localhost" || host.end_with?(".local", ".localhost")
+
+    address = IPAddr.new(host)
+    !(address.loopback? || address.private? || address.link_local? || address.multicast?)
+  rescue IPAddr::InvalidAddressError, IPAddr::AddressFamilyError
+    true
   end
 
   def record(application, status, detail)

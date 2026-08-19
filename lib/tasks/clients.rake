@@ -2,6 +2,7 @@ namespace :auth do
   desc "Register a confidential client: rake auth:register_client[noted,https://noted.mycomputer.network]"
   task :register_client, %i[name base_url] => :environment do |_task, args|
     base = args.fetch(:base_url).chomp("/")
+    abort "base_url must use https" unless URI(base).is_a?(URI::HTTPS)
 
     application = Doorkeeper::Application.create!(
       name: args.fetch(:name),
