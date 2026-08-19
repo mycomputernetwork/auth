@@ -1,0 +1,24 @@
+# Runtime for both development and the server.
+#
+# mise is a per-project version manager: it shims Ruby on PATH inside this
+# directory and touches nothing else on the machine. No system Ruby is
+# replaced, no /usr/local writes, and removing the project removes the
+# footprint. `mise install` reads this file and nothing else.
+[tools]
+ruby = "3.4.10"
+
+[env]
+# Gems install into the project rather than a shared user-wide gem home, so
+# two apps on the same server can never fight over a version.
+BUNDLE_PATH = "vendor/bundle"
+
+[tasks.setup]
+description = "Install gems, prepare the database, register the development clients"
+run = "bundle install && bin/rails db:prepare db:seed"
+
+[tasks.server]
+description = "Run the development server on auth's port"
+run = "bin/rails server -p 3001"
+
+[tasks.test]
+run = "bundle exec rspec"

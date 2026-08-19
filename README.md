@@ -10,15 +10,19 @@ Rails 8, SQLite, no Node. Runs on port 3001, served at
 ## Development
 
 ```bash
-bin/setup
-bin/rails server -p 3001
+mise trust && mise install
+mise run setup
+mise run server
 ```
+
+`mise` pins Ruby 3.4.10 and keeps gems in `vendor/bundle`, per app rather
+than per machine.
 
 Sign in at `/dev/sign_in` with a fixture from `config/dev_users.yml`. No
 Google credentials are needed locally.
 
 ```bash
-bundle exec rspec
+mise run test
 ```
 
 Integrating another app: [`docs/clients.md`](docs/clients.md).
