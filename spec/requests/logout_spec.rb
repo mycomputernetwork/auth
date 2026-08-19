@@ -35,7 +35,7 @@ RSpec.describe "Back-channel logout" do
     JWT.decode(jwt, Doorkeeper::OpenidConnect.signing_key.keypair.public_key, true, algorithm: "RS256")
   end
 
-  it "posts a logout token to every app holding a live token for the session" do
+  it "posts a logout token to every app that ever held a token for the session" do
     session = sign_in
     token_for(noted, session)
     token_for(chat, session)
@@ -80,7 +80,18 @@ RSpec.describe "Back-channel logout" do
     expect(LogoutDelivery.sole).to have_attributes(status: "delivered", sid: session.sid)
   end
 
-  it "skips apps with no live token for that session" do
+  it "still reaches an app whose token for the session was already revoked" do
+    session = sign_in
+    token_for(noted, session).update_column(:revoked_at, Time.current)
+    stub = stub_request(:post, noted.backchannel_logout_uri).to_return(status: 200)
+
+    delete "/logout"
+
+    expect(stub).to have_been_requested
+    expect(LogoutDelivery.sole).to have_attributes(status: "delivered", sid: session.sid)
+  end
+
+  it "skips apps with no token for that session" do
     session = sign_in
     token_for(noted, session)
     chat

@@ -19,9 +19,10 @@ class BackchannelLogout
 
   attr_reader :sid, :subject
 
-  # Notify every app that ever held a token for this sid, expired or not: an
-  # app's own session outlives the 15-minute access token and nothing refreshes
-  # it, so a logout arriving later must still reach an app whose token has lapsed.
+  # Notify every app that ever held a token for this sid, expired or revoked:
+  # an app's own session outlives the 15-minute access token, and nothing
+  # refreshes it, so a logout arriving later must still reach an app whose
+  # token has lapsed or been revoked since it was issued.
   def applications
     Doorkeeper::Application
       .where.not(backchannel_logout_uri: nil)
