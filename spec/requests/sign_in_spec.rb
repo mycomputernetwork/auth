@@ -7,43 +7,43 @@ RSpec.describe "Signing in with Google" do
   end
 
   it "signs in an allowlisted email and creates a session row" do
-    AllowedEmail.create!(email: "family@example.com")
+    AllowedEmail.create!(email: "dev1@example.com")
 
-    expect { callback(google_auth(email: "family@example.com")) }
+    expect { callback(google_auth(email: "dev1@example.com")) }
       .to change(User, :count).by(1).and change(Session, :count).by(1)
 
     expect(response).to redirect_to("/")
     follow_redirect!
-    expect(response.body).to include("family@example.com")
+    expect(response.body).to include("dev1@example.com")
   end
 
   it "turns away an email that is not allowlisted" do
-    expect { callback(google_auth(email: "stranger@example.com")) }.not_to change(User, :count)
+    expect { callback(google_auth(email: "dev3@example.com")) }.not_to change(User, :count)
     expect(response).to redirect_to("/sign_in")
   end
 
   it "turns away a revoked user" do
-    AllowedEmail.create!(email: "family@example.com")
-    User.create!(email: "family@example.com", google_sub: "google-family@example.com", revoked_at: Time.current)
+    AllowedEmail.create!(email: "dev1@example.com")
+    User.create!(email: "dev1@example.com", google_sub: "google-dev1@example.com", revoked_at: Time.current)
 
-    expect { callback(google_auth(email: "family@example.com")) }.not_to change(Session, :count)
+    expect { callback(google_auth(email: "dev1@example.com")) }.not_to change(Session, :count)
     expect(response).to redirect_to("/sign_in")
   end
 
   it "keeps the identity when a Google account is re-linked" do
-    AllowedEmail.create!(email: "family@example.com")
-    callback(google_auth(email: "family@example.com", uid: "old-sub"))
+    AllowedEmail.create!(email: "dev1@example.com")
+    callback(google_auth(email: "dev1@example.com", uid: "old-sub"))
     user = User.sole
 
-    callback(google_auth(email: "family@example.com", uid: "new-sub"))
+    callback(google_auth(email: "dev1@example.com", uid: "new-sub"))
 
     expect(User.sole.id).to eq(user.id)
     expect(User.sole.google_sub).to eq("new-sub")
   end
 
   it "drops the session on logout" do
-    AllowedEmail.create!(email: "family@example.com")
-    callback(google_auth(email: "family@example.com"))
+    AllowedEmail.create!(email: "dev1@example.com")
+    callback(google_auth(email: "dev1@example.com"))
 
     expect { delete "/logout" }.to change(Session, :count).by(-1)
     get "/"

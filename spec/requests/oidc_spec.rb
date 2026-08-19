@@ -13,7 +13,7 @@ RSpec.describe "The OIDC provider" do
   end
 
   def sign_in
-    post "/dev/sign_in", params: { email: "family@example.com" }
+    post "/dev/sign_in", params: { email: "dev1@example.com" }
     Session.sole
   end
 
@@ -110,7 +110,7 @@ RSpec.describe "The OIDC provider" do
       "sub" => User.sole.id.to_s,
       "aud" => application.uid,
       "sid" => session.sid,
-      "email" => "family@example.com",
+      "email" => "dev1@example.com",
       "email_verified" => true,
       "name" => "Family Member"
     )
@@ -174,7 +174,7 @@ RSpec.describe "The OIDC provider" do
 
     get "/oauth/userinfo", headers: { "Authorization" => "Bearer #{tokens.fetch("access_token")}" }
 
-    expect(response.parsed_body).to include("sub" => User.sole.id.to_s, "email" => "family@example.com")
+    expect(response.parsed_body).to include("sub" => User.sole.id.to_s, "email" => "dev1@example.com")
   end
 end
 
@@ -191,7 +191,7 @@ RSpec.describe "A public native client" do
   end
 
   it "exchanges a code with PKCE and no client secret" do
-    post "/dev/sign_in", params: { email: "family@example.com" }
+    post "/dev/sign_in", params: { email: "dev1@example.com" }
 
     get "/oauth/authorize", params: {
       client_id: application.uid, redirect_uri: application.redirect_uri,

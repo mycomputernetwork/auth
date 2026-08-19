@@ -20,7 +20,7 @@ RSpec.describe "Back-channel logout" do
   end
 
   def sign_in
-    post "/dev/sign_in", params: { email: "family@example.com" }
+    post "/dev/sign_in", params: { email: "dev1@example.com" }
     Session.sole
   end
 
