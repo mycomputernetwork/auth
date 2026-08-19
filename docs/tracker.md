@@ -33,8 +33,8 @@ cannot drift from this one unnoticed.
 
 ## Unexercised
 
-- The real Google callback. Specs use OmniAuth's test mode; no credentials
-  exist yet, so `omniauth-google-oauth2` has never made a round-trip.
+- The revoked and non-allowlisted paths against *Google* rather than the dev
+  picker. The happy path has been walked with real credentials.
 - Deployment. No Capistrano config, no Pangolin resource, no launchd label.
 - A real downstream app. Logout deliveries are asserted against stubbed HTTP;
   nothing has yet verified an auth-issued token or consumed a logout token.
@@ -43,6 +43,10 @@ cannot drift from this one unnoticed.
 - The issuer is fixed per environment while Doorkeeper derives endpoint URLs
   from the request, so running on a port other than 3001 in development
   produces a discovery document that disagrees with itself.
+
+Google's redirect URIs are registered for both `http://localhost:3001` and
+`https://auth.mycomputer.network`. While the consent screen is in Testing,
+a new person needs two entries: a Google test user *and* an `AllowedEmail`.
 
 ## Click-through
 
