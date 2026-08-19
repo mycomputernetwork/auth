@@ -8,4 +8,13 @@ if Rails.env.local?
     scopes: "openid email profile offline_access",
     confidential: true
   )
+
+  native = Doorkeeper::Application.find_or_initialize_by(uid: "noted-native-development")
+  native.update!(
+    name: "noted native (development)",
+    secret: nil,
+    redirect_uri: "network.mycomputer.noted://oauth/callback",
+    scopes: "openid email profile offline_access",
+    confidential: false
+  )
 end

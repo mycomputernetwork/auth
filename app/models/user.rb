@@ -21,6 +21,7 @@ class User < ApplicationRecord
 
   def revoke!
     update!(revoked_at: Time.current)
+    sessions.each { |session| BackchannelLogout.call(session) }
     sessions.destroy_all
   end
 end

@@ -177,3 +177,36 @@ RSpec.describe "The OIDC provider" do
     expect(response.parsed_body).to include("sub" => User.sole.id.to_s, "email" => "family@example.com")
   end
 end
+
+RSpec.describe "A public native client" do
+  let(:verifier) { SecureRandom.urlsafe_base64(64) }
+  let(:challenge) { Base64.urlsafe_encode64(Digest::SHA256.digest(verifier), padding: false) }
+
+  let(:application) do
+    Doorkeeper::Application.create!(
+      name: "noted android", uid: "noted-android", secret: nil,
+      redirect_uri: "network.mycomputer.noted://oauth/callback",
+      scopes: "openid email offline_access", confidential: false
+    )
+  end
+
+  it "exchanges a code with PKCE and no client secret" do
+    post "/dev/sign_in", params: { email: "family@example.com" }
+
+    get "/oauth/authorize", params: {
+      client_id: application.uid, redirect_uri: application.redirect_uri,
+      response_type: "code", scope: "openid email offline_access",
+      code_challenge: challenge, code_challenge_method: "S256"
+    }
+    code = Rack::Utils.parse_query(URI(response.location).query).fetch("code")
+
+    post "/oauth/token", params: {
+      grant_type: "authorization_code", code: code,
+      redirect_uri: application.redirect_uri, client_id: application.uid,
+      code_verifier: verifier
+    }
+
+    expect(response.parsed_body).to include("token_type" => "Bearer")
+    expect(response.parsed_body["refresh_token"]).to be_present
+  end
+end

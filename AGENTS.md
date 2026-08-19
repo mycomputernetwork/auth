@@ -8,7 +8,8 @@ on port 3001.
 ## Read these first, in order
 
 1. `docs/tracker.md` — milestone status, what to click, what is next.
-2. [ADR 0003 in noted](https://github.com/mycomputernetwork/noted/blob/main/docs/ADR/0003-centralized-auth-service.md)
+2. `docs/clients.md` — the contract downstream apps integrate against.
+3. [ADR 0003 in noted](https://github.com/mycomputernetwork/noted/blob/main/docs/ADR/0003-centralized-auth-service.md)
    — why this service exists and what shape it takes. Decisions live there,
    not here.
 

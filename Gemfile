@@ -16,6 +16,7 @@ gem "omniauth-rails_csrf_protection", "~> 1.0"
 group :development, :test do
   gem "debug", platforms: %i[mri windows], require: "debug/prelude"
   gem "rspec-rails", "~> 8.0"
+  gem "webmock", "~> 3.23", require: false
 end
 
 group :development do

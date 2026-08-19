@@ -21,6 +21,8 @@ Google credentials are needed locally.
 bundle exec rspec
 ```
 
+Integrating another app: [`docs/clients.md`](docs/clients.md).
+
 Design decisions live in
 [ADR 0003](https://github.com/mycomputernetwork/noted/blob/main/docs/ADR/0003-centralized-auth-service.md);
 current state in [`docs/tracker.md`](docs/tracker.md).

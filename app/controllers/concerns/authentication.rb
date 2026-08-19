@@ -23,6 +23,7 @@ module Authentication
   end
 
   def sign_out
+    BackchannelLogout.call(current_session) if current_session
     current_session&.destroy
     cookies.delete(:auth_sid)
     @current_session = nil
