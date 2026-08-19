@@ -1,5 +1,7 @@
 # Tracker
 
+_Last handoff: 19 Aug 2026._
+
 ## Status
 
 **M1 — skeleton and the Google upstream: done.** Users, sessions, and a
@@ -19,7 +21,8 @@ record each attempt in `logout_deliveries`, and revoke the session's tokens so
 a refresh cannot outlive the logout. Public PKCE-only native clients work
 without a secret. `docs/clients.md` is the integration contract.
 
-**M4 — golden fixtures: next.** _Last handoff: 19 Aug 2026._ A rake task that freezes a real access token,
+**M4 — golden fixtures: next**, alongside two gaps noted below — the
+token-expiry hole in logout delivery, and RP-initiated logout. A rake task that freezes a real access token,
 ID token, JWKS and logout token into a downstream repo, so a stub issuer
 cannot drift from this one unnoticed.
 
@@ -43,6 +46,10 @@ integer keys the gem ships with; only `resource_owner_id` is a string.
 - Nothing outstanding in the handshake itself: noted has verified an
   auth-issued token, and a real back-channel logout was delivered end to end
   (`delivered`, HTTP 200) on 19 Aug.
+- The token-expiry hole: deliveries go to apps holding a *live* access token
+  for the `sid`. Tokens last 15 minutes, a downstream web session lasts far
+  longer, and nothing refreshes it — so a logout an hour after sign-in may reach
+  nobody. Unconfirmed; test it before fixing it.
 - RP-initiated logout. Signing out of a *client* ends only that client's
   session; auth's own session survives, so the next sign-in is silent. Closing
   it means an `end_session_endpoint` here and a redirect there.
