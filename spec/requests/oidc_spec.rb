@@ -112,7 +112,7 @@ RSpec.describe "The OIDC provider" do
       "sid" => session.sid,
       "email" => "dev1@example.com",
       "email_verified" => true,
-      "name" => "Family Member"
+      "name" => "Dev user 1"
     )
   end
 
