@@ -19,7 +19,7 @@ record each attempt in `logout_deliveries`, and revoke the session's tokens so
 a refresh cannot outlive the logout. Public PKCE-only native clients work
 without a secret. `docs/clients.md` is the integration contract.
 
-**M4 — golden fixtures: next.** A rake task that freezes a real access token,
+**M4 — golden fixtures: next.** _Last handoff: 19 Aug 2026._ A rake task that freezes a real access token,
 ID token, JWKS and logout token into a downstream repo, so a stub issuer
 cannot drift from this one unnoticed.
 
