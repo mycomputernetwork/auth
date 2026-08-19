@@ -69,6 +69,17 @@ RSpec.describe "Back-channel logout" do
     expect(claims).not_to include("nonce")
   end
 
+  it "still reaches an app whose access token has passed its 15-minute expiry" do
+    session = sign_in
+    token_for(noted, session).update_column(:created_at, 20.minutes.ago)
+    stub = stub_request(:post, noted.backchannel_logout_uri).to_return(status: 200)
+
+    delete "/logout"
+
+    expect(stub).to have_been_requested
+    expect(LogoutDelivery.sole).to have_attributes(status: "delivered", sid: session.sid)
+  end
+
   it "skips apps with no live token for that session" do
     session = sign_in
     token_for(noted, session)

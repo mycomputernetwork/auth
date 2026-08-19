@@ -16,22 +16,24 @@ PKCE is required, refresh tokens rotate and the old access token is revoked
 on use, and a refresh by a revoked user is rejected before Doorkeeper sees it.
 
 **M3 — clients and back-channel logout: done.** `/logout` and `User#revoke!`
-POST a signed logout token to every app holding a live token for the session,
+POST a signed logout token to every app that ever held a token for the session,
 record each attempt in `logout_deliveries`, and revoke the session's tokens so
 a refresh cannot outlive the logout. Public PKCE-only native clients work
 without a secret. `docs/clients.md` is the integration contract.
 
-**M4 — golden fixtures: next**, alongside two gaps noted below — the
-token-expiry hole in logout delivery, and RP-initiated logout. A rake task that freezes a real access token,
-ID token, JWKS and logout token into a downstream repo, so a stub issuer
-cannot drift from this one unnoticed.
+**M4 — golden fixtures: done.** `spec/golden_fixtures_spec.rb` (tagged `:golden`,
+excluded from the suite, run deliberately) drives a real PKCE exchange with a
+frozen clock and writes a real access token, ID token, JWKS and logout token to
+`spec/fixtures/golden.json`. `rake auth:golden_fixtures[../noted]` copies it into a
+downstream repo, where one spec verifies the tokens through the real verifier and
+asserts its stub cannot drift from this one unnoticed.
 
 | Milestone | State |
 |---|---|
 | M1 skeleton + Google upstream | done |
 | M2 Doorkeeper OIDC provider | done |
 | M3 clients + back-channel logout | done |
-| M4 golden fixtures for downstream apps | next |
+| M4 golden fixtures for downstream apps | done |
 | Deploy to `~/services/auth` | not started |
 
 Ids are UUIDs across auth's own tables, so a `sub` can never collide with a
@@ -46,10 +48,6 @@ integer keys the gem ships with; only `resource_owner_id` is a string.
 - Nothing outstanding in the handshake itself: noted has verified an
   auth-issued token, and a real back-channel logout was delivered end to end
   (`delivered`, HTTP 200) on 19 Aug.
-- The token-expiry hole: deliveries go to apps holding a *live* access token
-  for the `sid`. Tokens last 15 minutes, a downstream web session lasts far
-  longer, and nothing refreshes it — so a logout an hour after sign-in may reach
-  nobody. Unconfirmed; test it before fixing it.
 - RP-initiated logout. Signing out of a *client* ends only that client's
   session; auth's own session survives, so the next sign-in is silent. Closing
   it means an `end_session_endpoint` here and a redirect there.

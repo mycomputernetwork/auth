@@ -13,6 +13,9 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
 
+  config.include ActiveSupport::Testing::TimeHelpers
+  config.filter_run_excluding golden: true
+
   config.before { OmniAuth.config.test_mode = true }
   config.after { OmniAuth.config.mock_auth.clear }
 end

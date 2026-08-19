@@ -79,7 +79,10 @@ bound on revocation.
 ## Back-channel logout
 
 When a user signs out of auth — or is revoked — auth POSTs, server to server,
-to every registered app holding a live access token for that session:
+to every registered app that has ever held a token for that session. Delivery
+does not depend on that token still being live: your own session can outlast the
+15-minute access token, so a logout arriving later still reaches you.
+
 
 ```
 POST BASE/auth/backchannel_logout
