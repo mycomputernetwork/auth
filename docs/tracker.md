@@ -1,6 +1,6 @@
 # Tracker
 
-_Last handoff: 19 Aug 2026._
+_Last handoff: 20 Aug 2026._
 
 ## Status
 
@@ -21,6 +21,16 @@ record each attempt in `logout_deliveries`, and revoke the session's tokens so
 a refresh cannot outlive the logout. Public PKCE-only native clients work
 without a secret. `docs/clients.md` is the integration contract.
 
+**M5 — RP-initiated logout: done.** `GET /oauth/logout` (advertised as
+`end_session_endpoint` in discovery) ends auth's session and returns the
+browser to the client. `EndSession` decodes the `id_token_hint` — signature and
+`iss` checked, expiry deliberately not, since an ID token outlives its two
+minutes in a browser that has been idle — and redirects only to the exact
+`post_logout_redirect_uri` registered on `oauth_applications`. A hint naming
+some other `sid` redirects without ending the browser's session. `client_id`
+is accepted in place of a hint. Sign-out runs the usual back-channel fan-out,
+so the other apps hear about it.
+
 **M4 — golden fixtures: done.** `spec/golden_fixtures_spec.rb` (tagged `:golden`,
 excluded from the suite, run deliberately) drives a real PKCE exchange with a
 frozen clock and writes a real access token, ID token, JWKS and logout token to
@@ -34,6 +44,7 @@ asserts its stub cannot drift from this one unnoticed.
 | M2 Doorkeeper OIDC provider | done |
 | M3 clients + back-channel logout | done |
 | M4 golden fixtures for downstream apps | done |
+| M5 RP-initiated logout | done |
 | Deploy to `~/services/auth` | not started |
 
 Ids are UUIDs across auth's own tables, so a `sub` can never collide with a
@@ -48,9 +59,13 @@ integer keys the gem ships with; only `resource_owner_id` is a string.
 - Nothing outstanding in the handshake itself: noted has verified an
   auth-issued token, and a real back-channel logout was delivered end to end
   (`delivered`, HTTP 200) on 19 Aug.
-- RP-initiated logout. Signing out of a *client* ends only that client's
-  session; auth's own session survives, so the next sign-in is silent. Closing
-  it means an `end_session_endpoint` here and a redirect there.
+- Nothing outstanding in RP-initiated logout: walked from noted's account menu
+  and again by curl on 20 Aug — valid, expired, forged and foreign-`sid` hints,
+  an unregistered redirect, an unknown client, `state`, and a second logout
+  after the session was already gone. `bin/rails db:seed` again after pulling,
+  though: the dev client needs its `post_logout_redirect_uri`
+  (`http://localhost:3000/sign_in`), and without it the browser stops on auth's
+  sign-in page instead of returning to noted.
 - Delivery is synchronous and unretried: a slow app blocks the logout request
   for up to 5 seconds, and a failed delivery is recorded but never retried.
 - The issuer is fixed per environment while Doorkeeper derives endpoint URLs
@@ -77,7 +92,10 @@ Run `bin/rails server -p 3001`, then:
 8. Signed out, hitting `/oauth/authorize?client_id=noted-development&…`
    redirects to `/sign_in`, which offers Google and the dev picker; after picking a user it redirects back to the
    client's `redirect_uri` with a `code`.
-9. After that, sign out and check `LogoutDelivery.last` — with no app running
+9. `/oauth/logout?client_id=noted-development&post_logout_redirect_uri=http://localhost:3000/sign_in`
+   ends the session and returns to noted; the same URL with any other
+   `post_logout_redirect_uri` lands on auth's own `/sign_in` instead.
+10. After that, sign out and check `LogoutDelivery.last` — with no app running
    at :3000 it records `failed`, and the sign-out still completes.
 
 ## Operations

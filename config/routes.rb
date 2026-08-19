@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     skip_controllers :applications, :authorized_applications
   end
   use_doorkeeper_openid_connect
+  get "oauth/logout", to: "oauth/end_sessions#show", as: :end_session
   root "home#show"
 
   get "sign_in", to: "sessions#new", as: :sign_in

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_20_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_20_150000) do
   create_table "allowed_emails", id: :string, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
@@ -68,6 +68,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_20_000001) do
     t.boolean "confidential", default: true, null: false
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.text "post_logout_redirect_uri"
     t.text "redirect_uri", null: false
     t.string "scopes", default: "", null: false
     t.string "secret"

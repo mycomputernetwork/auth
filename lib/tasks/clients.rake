@@ -8,6 +8,7 @@ namespace :auth do
       name: args.fetch(:name),
       redirect_uri: "#{base}/auth/oidc/callback",
       backchannel_logout_uri: "#{base}/auth/backchannel_logout",
+      post_logout_redirect_uri: "#{base}/sign_in",
       scopes: "openid email profile offline_access",
       confidential: true
     )

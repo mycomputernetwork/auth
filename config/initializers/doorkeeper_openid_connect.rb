@@ -5,6 +5,8 @@ Doorkeeper::OpenidConnect.configure do
 
   subject_types_supported [:public]
 
+  end_session_endpoint { end_session_url }
+
   subject { |resource_owner, _application| resource_owner.id }
 
   resource_owner_from_access_token { |access_token| User.active.find_by(id: access_token.resource_owner_id) }

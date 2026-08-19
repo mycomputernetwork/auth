@@ -5,6 +5,7 @@ if Rails.env.local?
     secret: "noted-development-secret",
     redirect_uri: "http://localhost:3000/auth/oidc/callback",
     backchannel_logout_uri: "http://localhost:3000/auth/backchannel_logout",
+    post_logout_redirect_uri: "http://localhost:3000/sign_in",
     scopes: "openid email profile offline_access",
     confidential: true
   )

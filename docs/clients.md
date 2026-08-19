@@ -29,6 +29,7 @@ derives two URLs the app must serve:
 |---|---|
 | `redirect_uri` | `BASE/auth/oidc/callback` |
 | `backchannel_logout_uri` | `BASE/auth/backchannel_logout` |
+| `post_logout_redirect_uri` | `BASE/sign_in` |
 
 The second registers a public client: no secret, because an APK or an app
 bundle cannot keep one. PKCE is what replaces it, and auth requires PKCE of
@@ -44,6 +45,7 @@ to a resource server:
 
 - `/oauth/discovery/keys` — JWKS. Cache it; refetch on an unknown `kid`.
 - `/oauth/token` — code exchange and refresh.
+- `/oauth/logout` — RP-initiated logout, for the browser.
 
 The issuer is `https://auth.mycomputer.network` in production and
 `http://localhost:3001` in development. Verify it: it is the `iss` claim on
@@ -108,6 +110,28 @@ not land is visible rather than silent:
 ```ruby
 LogoutDelivery.failed.where("created_at > ?", 1.day.ago)
 ```
+
+## RP-initiated logout
+
+Signing out of your app must end auth's session too, or the next sign-in is
+silent and a shared machine keeps the account. Instead of destroying your own
+session and stopping there, destroy it and redirect the browser to:
+
+```
+GET /oauth/logout
+  ?id_token_hint=<the ID token from sign-in>
+  &post_logout_redirect_uri=BASE/sign_in
+  &state=<optional, handed back untouched>
+```
+
+Auth ends its own session, fans back-channel logouts out to the other apps,
+and redirects to `post_logout_redirect_uri` — but only if that exact string is
+the one registered for the client. Anything else lands on auth's sign-in page.
+
+The hint identifies the client and the session to end. It may be expired; it
+may not be forged, and one naming a session other than the browser's current
+auth session redirects without signing anyone out. `client_id=<uid>` is
+accepted in its place if you have not kept the ID token.
 
 ## Allowlist and revocation
 
