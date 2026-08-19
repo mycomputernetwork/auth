@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "mycomputer.network" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application" %>
+  </head>
+
+  <body>
+    <main>
+      <% if flash.any? %>
+        <ul class="flash">
+          <% flash.each do |kind, message| %><li class="<%= kind %>"><%= message %></li><% end %>
+        </ul>
+      <% end %>
+      <%= yield %>
+    </main>
+  </body>
+</html>

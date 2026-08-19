@@ -1,0 +1,5 @@
+<h1>mycomputer.network</h1>
+<%= button_to "Continue with Google", "/auth/google_oauth2", data: { turbo: false } %>
+<% if Rails.env.local? %>
+  <p><%= link_to "Development sign-in", dev_sign_in_path %></p>
+<% end %>

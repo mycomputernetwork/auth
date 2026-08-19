@@ -1,0 +1,16 @@
+- email: family@example.com
+  name: Family Member
+  allowed: true
+
+- email: second@example.com
+  name: Second Member
+  allowed: true
+
+- email: stranger@example.com
+  name: Not Invited
+  allowed: false
+
+- email: revoked@example.com
+  name: Revoked Member
+  allowed: true
+  revoked: true

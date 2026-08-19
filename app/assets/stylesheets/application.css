@@ -1,0 +1,6 @@
+:root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+main { max-width: 30rem; margin: 4rem auto; padding: 0 1rem; line-height: 1.5; }
+ul { list-style: none; padding: 0; }
+li { margin: .5rem 0; }
+.flash .alert { color: crimson; }
+button { font: inherit; padding: .5rem .75rem; }
