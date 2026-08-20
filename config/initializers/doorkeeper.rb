@@ -6,7 +6,7 @@ Doorkeeper.configure do
       current_user
     else
       store_return_to(request.fullpath)
-      redirect_to sign_in_path
+      redirect_to sign_in_path(idp: params[:idp])
     end
   end
 

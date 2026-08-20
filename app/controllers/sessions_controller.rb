@@ -1,6 +1,10 @@
 class SessionsController < ApplicationController
   def new
-    redirect_to root_path if signed_in?
+    return redirect_to root_path if signed_in?
+
+    # Development keeps the picker reachable; there are no Google credentials
+    # on a laptop.
+    @start_google = params[:idp] == "google" && session[:return_to].present? && !Rails.env.local?
   end
 
   def create

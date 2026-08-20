@@ -2,7 +2,7 @@
   <%= image_tag "logo.jpg", alt: "", class: "card__logo" %>
   <h1 class="card__title">Welcome to mycomputer.network</h1>
 
-  <%= button_to "/auth/google_oauth2", class: "button", data: { turbo: false } do %>
+  <%= button_to "/auth/google_oauth2", class: "button", data: { turbo: false }, form: { id: "google" } do %>
     <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
       <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62Z"/>
       <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.93v2.33A9 9 0 0 0 9 18Z"/>
@@ -16,3 +16,9 @@
     <p class="footnote"><%= link_to "Development sign-in", dev_sign_in_path %></p>
   <% end %>
 </div>
+
+<%# A client that names its provider is sent there without a second click; the
+    button stays as the fallback when the submit cannot run. %>
+<% if @start_google %>
+  <script>document.getElementById("google").requestSubmit()</script>
+<% end %>

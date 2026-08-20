@@ -78,6 +78,15 @@ access token immediately. A refresh by a revoked user is rejected with
 `invalid_grant`, which is what makes the 15-minute access token TTL the real
 bound on revocation.
 
+## Skipping auth's sign-in page
+
+Add `idp=google` to the authorization request and auth starts Google straight
+away instead of showing its own page with a button on it. The hint survives the
+redirect to `/sign_in`, and the page still renders the button as a fallback, so
+nothing breaks if the submit cannot run. Any other value, or none, leaves the
+page as it is. Development ignores the hint and keeps the picker, which is the
+only way to sign in on a machine with no Google credentials.
+
 ## Rate limits
 
 The token endpoint allows 60 requests a minute per `client_id`; sign-in and
