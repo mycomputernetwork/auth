@@ -87,6 +87,15 @@ colour: the screen is greyscale apart from the Google mark and the error red. Bo
 (`app/assets/images/logo.jpg`), a title, and a full-width button with the Google
 mark inline as SVG.
 
+**A client can name its provider.** `idp=google` on the authorization request
+sends an unauthenticated visitor to Google in plain redirects, with auth's own
+page never rendered; noted sends it, and its sign-in button now carries the same
+Google mark and styling. Starting a flow is a GET
+(`OmniAuth.config.allowed_request_methods = [:get]`, request validation off),
+which is what removes the page that used to carry the CSRF token. The callback
+still verifies `state`, so a forged start cannot become a session. Development
+ignores the hint so the dev picker stays reachable.
+
 ## Unexercised
 
 - The revoked and non-allowlisted paths against *Google* rather than the dev

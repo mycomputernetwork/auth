@@ -80,12 +80,20 @@ bound on revocation.
 
 ## Skipping auth's sign-in page
 
-Add `idp=google` to the authorization request and auth starts Google straight
-away instead of showing its own page with a button on it. The hint survives the
-redirect to `/sign_in`, and the page still renders the button as a fallback, so
-nothing breaks if the submit cannot run. Any other value, or none, leaves the
-page as it is. Development ignores the hint and keeps the picker, which is the
-only way to sign in on a machine with no Google credentials.
+Add `idp=google` to the authorization request and an unauthenticated visitor is
+redirected to Google rather than to auth's own page:
+
+```
+/oauth/authorize?…&idp=google  →  /auth/google_oauth2  →  accounts.google.com
+```
+
+Ordinary redirects, no page rendered in between. Any other value, or none, lands
+on `/sign_in` as before. Development ignores the hint and keeps the picker,
+which is the only way to sign in on a machine with no Google credentials.
+
+Starting a sign-in is a GET, so a link on another site can begin this flow. It
+cannot finish one: the callback checks `state` against auth's session, so a
+forged start produces a Google screen and nothing more.
 
 ## Rate limits
 
