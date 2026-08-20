@@ -65,6 +65,11 @@ certificate and sign-in dies after the redirect. It is in the launchd plist and
 `default_env` now. Suspect this first if a Google callback fails on the server
 but the same code works locally.
 
+**Walked in production on 20 Aug.** A real Google identity signed into noted
+through auth and out again via `/oauth/logout`: the back-channel fan-out
+recorded `delivered`, the access token was revoked, and both session rows
+disappeared. `sub` reached noted as a UUID.
+
 **Rate limiting: `rack-attack`.** A per-process `MemoryStore`, since Puma runs a
 single worker and SQLite should not take a write per request. Sign-in and the
 Google callback are throttled by address; `/oauth/authorize` by address; the
@@ -84,10 +89,6 @@ mark inline as SVG.
 
 ## Unexercised
 
-- Sign-in in production end to end. Blocked while Pangolin's own PIN sits in
-  front of the resource: an OIDC provider behind a second login breaks both
-  Google's callback and a relying party's server-side discovery. Once it serves
-  unauthenticated, walk sign-in into noted and out through `/oauth/logout`.
 - The revoked and non-allowlisted paths against *Google* rather than the dev
   picker. The happy path has been walked with real credentials.
 - Nothing outstanding in the handshake itself: noted has verified an
