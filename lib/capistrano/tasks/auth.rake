@@ -87,6 +87,8 @@ namespace :auth do
             <string>true</string>
             <key>PORT</key>
             <string>3001</string>
+            <key>SSL_CERT_FILE</key>
+            <string>/etc/ssl/cert.pem</string>
           </dict>
 
           <key>RunAtLoad</key>

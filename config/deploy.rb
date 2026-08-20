@@ -18,7 +18,11 @@ set :default_env, {
   "RAILS_ENV" => "production",
   "AUTH_DB_PATH" => "/Users/prabhanshu/services/auth/shared/db_data",
   "RAILS_LOG_TO_STDOUT" => "true",
-  "RAILS_SERVE_STATIC_FILES" => "true"
+  "RAILS_SERVE_STATIC_FILES" => "true",
+  # mise's Ruby is linked against a Homebrew OpenSSL whose cert.pem is not on
+  # this machine, leaving it with no CA store: every outbound TLS call, Google's
+  # token exchange included, fails to verify. Point it at the system store.
+  "SSL_CERT_FILE" => "/etc/ssl/cert.pem"
 }
 
 set :bundle_path, -> { shared_path.join("vendor/bundle") }
