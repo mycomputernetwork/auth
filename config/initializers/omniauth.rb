@@ -7,5 +7,10 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            access_type: "online"
 end
 
-OmniAuth.config.allowed_request_methods = [:post]
+# GET so a client naming Google can be redirected straight there, with no page
+# in between to carry a CSRF token. Starting a sign-in is not a state change:
+# the callback still verifies `state` against this session, so a forged request
+# phase can produce an unexpected Google screen and nothing else.
+OmniAuth.config.allowed_request_methods = [:get]
+OmniAuth.config.request_validation_phase = ->(_env) {}
 OmniAuth.config.on_failure = proc { |env| SessionsController.action(:failure).call(env) }

@@ -6,7 +6,14 @@ Doorkeeper.configure do
       current_user
     else
       store_return_to(request.fullpath)
-      redirect_to sign_in_path(idp: params[:idp])
+
+      # Development keeps the picker reachable; there are no Google credentials
+      # on a laptop.
+      if params[:idp] == "google" && !Rails.env.local?
+        redirect_to "/auth/google_oauth2"
+      else
+        redirect_to sign_in_path
+      end
     end
   end
 

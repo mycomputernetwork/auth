@@ -87,26 +87,26 @@ RSpec.describe "The OIDC provider" do
     expect(response).to redirect_to("/sign_in")
   end
 
-  it "carries a client's provider hint through to sign-in, which starts it" do
+  it "sends a client that names Google straight to Google" do
+    allow(Rails.env).to receive(:local?).and_return(false)
+
     get "/oauth/authorize", params: {
       client_id: application.uid, redirect_uri: application.redirect_uri,
       response_type: "code", scope: "openid", idp: "google",
       code_challenge: challenge, code_challenge_method: "S256"
     }
 
-    expect(response).to redirect_to("/sign_in?idp=google")
-
-    allow(Rails.env).to receive(:local?).and_return(false)
-    follow_redirect!
-
-    expect(response.body).to include("requestSubmit")
+    expect(response).to redirect_to("/auth/google_oauth2")
   end
 
-  it "leaves sign-in waiting for a click when no provider is named" do
-    get "/sign_in"
+  it "keeps the picker reachable in development, where there are no Google credentials" do
+    get "/oauth/authorize", params: {
+      client_id: application.uid, redirect_uri: application.redirect_uri,
+      response_type: "code", scope: "openid", idp: "google",
+      code_challenge: challenge, code_challenge_method: "S256"
+    }
 
-    expect(response.body).to include("Login with Google")
-    expect(response.body).not_to include("requestSubmit")
+    expect(response).to redirect_to("/sign_in")
   end
 
   it "issues a JWT access token and an ID token for a PKCE exchange" do
