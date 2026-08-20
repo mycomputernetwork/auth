@@ -58,6 +58,13 @@ dabba's newt client. Production data was seeded by hand: the allowlist entry and
 noted's production client, whose `post_logout_redirect_uri` is
 `https://noted.mycomputer.network/sign_in`.
 
+**`SSL_CERT_FILE=/etc/ssl/cert.pem` is required on the server.** mise's Ruby is
+linked against a Homebrew OpenSSL whose `cert.pem` is not on that machine, which
+leaves it with no CA store at all: Google's token exchange fails to verify the
+certificate and sign-in dies after the redirect. It is in the launchd plist and
+`default_env` now. Suspect this first if a Google callback fails on the server
+but the same code works locally.
+
 **Rate limiting: `rack-attack`.** A per-process `MemoryStore`, since Puma runs a
 single worker and SQLite should not take a write per request. Sign-in and the
 Google callback are throttled by address; `/oauth/authorize` by address; the
@@ -66,6 +73,13 @@ guessable credential auth has, and one client's flood must not lock out
 another's. Discovery, the JWKS and `/up` are safelisted outright — relying
 parties fetch them unauthenticated and a throttled address must still be able
 to verify a token. Throttled requests get 429 with `retry-after`.
+
+**Sign-in pages restyled.** `app/assets/stylesheets/application.css` carries the
+subset of noted's design tokens the two views need — same system font stack,
+sizes, spacing, surfaces and accent — so the two apps read as one product. Both
+`/sign_in` and `/dev/sign_in` are a centred card: the hand-drawn logo
+(`app/assets/images/logo.jpg`, inverted in CSS so ink reads as chalk on the dark
+surface), a title, and a full-width button with the Google mark inline as SVG.
 
 ## Unexercised
 

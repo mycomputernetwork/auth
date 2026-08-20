@@ -1,6 +1,232 @@
-:root { color-scheme: light dark; font-family: system-ui, sans-serif; }
-main { max-width: 30rem; margin: 4rem auto; padding: 0 1rem; line-height: 1.5; }
-ul { list-style: none; padding: 0; }
-li { margin: .5rem 0; }
-.flash .alert { color: crimson; }
-button { font: inherit; padding: .5rem .75rem; }
+/*
+ * Tokens mirror noted's, so a person moving between the two apps sees one
+ * product. Only the subset the two sign-in screens use is carried over.
+ */
+
+:root {
+  color-scheme: dark;
+
+  --surface-sunken:  #131315;
+  --surface:         #1b1b1d;
+  --surface-raised:  #232326;
+  --surface-overlay: #2b2b30;
+
+  --text:       #e8e8ea;
+  --text-dim:   #a4a4ac;
+  --text-faint: #75757d;
+
+  --border:        #34343a;
+  --border-strong: #4a4a52;
+
+  --accent:          #e8b44a;
+  --accent-tint:     rgba(232, 180, 74, 0.12);
+
+  --danger:      #d9635a;
+  --danger-tint: rgba(217, 99, 90, 0.12);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 2rem;
+  --space-8: 3rem;
+
+  --radius-sm:   0.25rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   0.75rem;
+  --radius-full: 999px;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --size-label: 0.6875rem;
+  --size-xs:    0.78125rem;
+  --size-sm:    0.875rem;
+  --size-md:    1.0625rem;
+  --size-lg:    1.3125rem;
+  --size-xl:    1.625rem;
+
+  --leading-tight: 1.25;
+  --leading-body:  1.5;
+
+  --weight-normal: 400;
+  --weight-medium: 550;
+  --weight-bold:   650;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.45);
+
+  --duration-fast: 90ms;
+  --ease: cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --duration-fast: 0ms; }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--size-md);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+main {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-6);
+}
+
+.card {
+  width: 100%;
+  max-width: 24rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+  padding: var(--space-8) var(--space-7) var(--space-7);
+  text-align: center;
+}
+
+.card__logo {
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  /* The mark is ink on paper; inverting reads as chalk on the dark surface. */
+  filter: invert(1) contrast(1.1);
+}
+
+.card__title {
+  margin: var(--space-4) 0 var(--space-1);
+  font-size: var(--size-lg);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+}
+
+.card__subtitle {
+  margin: 0 0 var(--space-6);
+  font-size: var(--size-sm);
+  color: var(--text-dim);
+}
+
+.button {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  font: inherit;
+  font-size: var(--size-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease),
+              border-color var(--duration-fast) var(--ease);
+}
+
+.button:hover { background: var(--surface-overlay); }
+.button:active { transform: translateY(1px); }
+.button svg { flex: none; }
+
+form { margin: 0; }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-5) 0;
+  font-size: var(--size-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.divider::before, .divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.users {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  text-align: left;
+}
+
+.user__name { font-weight: var(--weight-medium); }
+.user__email { color: var(--text-faint); font-size: var(--size-xs); }
+
+.users .button {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.footnote {
+  margin: var(--space-5) 0 0;
+  font-size: var(--size-sm);
+  color: var(--text-dim);
+}
+
+.footnote a { color: var(--accent); text-decoration: none; }
+.footnote a:hover { text-decoration: underline; }
+
+.flash {
+  width: 100%;
+  max-width: 24rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.flash li {
+  font-size: var(--size-sm);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  color: var(--text-dim);
+}
+
+.flash .alert {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: var(--danger-tint);
+}
+
+.flash .notice {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
