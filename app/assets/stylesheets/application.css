@@ -18,8 +18,6 @@
   --border:        #34343a;
   --border-strong: #4a4a52;
 
-  --accent:          #e8b44a;
-  --accent-tint:     rgba(232, 180, 74, 0.12);
 
   --danger:      #d9635a;
   --danger-tint: rgba(217, 99, 90, 0.12);
@@ -81,7 +79,7 @@ body {
 a { color: inherit; }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--text);
   outline-offset: 2px;
 }
 
@@ -111,19 +109,17 @@ main {
   height: 4.5rem;
   object-fit: contain;
   border-radius: var(--radius-md);
-  /* The mark is ink on paper; inverting reads as chalk on the dark surface. */
-  filter: invert(1) contrast(1.1);
 }
 
 .card__title {
-  margin: var(--space-4) 0 var(--space-1);
-  font-size: var(--size-lg);
+  margin: var(--space-4) 0 var(--space-6);
+  font-size: var(--size-md);
   font-weight: var(--weight-bold);
   line-height: var(--leading-tight);
 }
 
 .card__subtitle {
-  margin: 0 0 var(--space-6);
+  margin: calc(var(--space-1) - var(--space-6)) 0 var(--space-6);
   font-size: var(--size-sm);
   color: var(--text-dim);
 }
@@ -196,7 +192,7 @@ form { margin: 0; }
   color: var(--text-dim);
 }
 
-.footnote a { color: var(--accent); text-decoration: none; }
+.footnote a { color: var(--text); text-decoration: none; }
 .footnote a:hover { text-decoration: underline; }
 
 .flash {
@@ -226,7 +222,6 @@ form { margin: 0; }
 }
 
 .flash .notice {
-  color: var(--accent);
-  border-color: var(--accent);
-  background: var(--accent-tint);
+  color: var(--text);
+  border-color: var(--border-strong);
 }

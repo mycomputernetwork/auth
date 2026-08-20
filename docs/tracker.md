@@ -76,10 +76,11 @@ to verify a token. Throttled requests get 429 with `retry-after`.
 
 **Sign-in pages restyled.** `app/assets/stylesheets/application.css` carries the
 subset of noted's design tokens the two views need — same system font stack,
-sizes, spacing, surfaces and accent — so the two apps read as one product. Both
+sizes, spacing and surfaces — so the two apps read as one product. No accent
+colour: the screen is greyscale apart from the Google mark and the error red. Both
 `/sign_in` and `/dev/sign_in` are a centred card: the hand-drawn logo
-(`app/assets/images/logo.jpg`, inverted in CSS so ink reads as chalk on the dark
-surface), a title, and a full-width button with the Google mark inline as SVG.
+(`app/assets/images/logo.jpg`), a title, and a full-width button with the Google
+mark inline as SVG.
 
 ## Unexercised
 
