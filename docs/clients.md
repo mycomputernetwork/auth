@@ -78,6 +78,15 @@ access token immediately. A refresh by a revoked user is rejected with
 `invalid_grant`, which is what makes the 15-minute access token TTL the real
 bound on revocation.
 
+## Rate limits
+
+The token endpoint allows 60 requests a minute per `client_id`; sign-in and
+`/oauth/authorize` are limited per address. Over the limit auth answers `429`
+with `retry-after` in seconds — retry after it elapses rather than immediately,
+and treat it as distinct from `invalid_grant`, which will not become valid on a
+retry. Discovery and the JWKS are never throttled, so verifying a token cannot
+be rate-limited out of working.
+
 ## Back-channel logout
 
 When a user signs out of auth — or is revoked — auth POSTs, server to server,

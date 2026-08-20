@@ -45,17 +45,36 @@ asserts its stub cannot drift from this one unnoticed.
 | M3 clients + back-channel logout | done |
 | M4 golden fixtures for downstream apps | done |
 | M5 RP-initiated logout | done |
-| Deploy to `~/services/auth` | not started |
+| Deploy to `~/services/auth` | done |
 
 Ids are UUIDs across auth's own tables, so a `sub` can never collide with a
 value a downstream app guessed or seeded. Doorkeeper's own tables keep the
 integer keys the gem ships with; only `resource_owner_id` is a string.
 
+**Deployed.** Capistrano mirrors noted's setup one port over: Puma on loopback
+`3001`, launchd label `com.auth.app`, `AUTH_DB_PATH` into `database.yml`,
+`cap production auth:restart`. Pangolin serves `auth.mycomputer.network` from
+dabba's newt client. Production data was seeded by hand: the allowlist entry and
+noted's production client, whose `post_logout_redirect_uri` is
+`https://noted.mycomputer.network/sign_in`.
+
+**Rate limiting: `rack-attack`.** A per-process `MemoryStore`, since Puma runs a
+single worker and SQLite should not take a write per request. Sign-in and the
+Google callback are throttled by address; `/oauth/authorize` by address; the
+token endpoint by `client_id`, because a wrong client secret is the one
+guessable credential auth has, and one client's flood must not lock out
+another's. Discovery, the JWKS and `/up` are safelisted outright — relying
+parties fetch them unauthenticated and a throttled address must still be able
+to verify a token. Throttled requests get 429 with `retry-after`.
+
 ## Unexercised
 
+- Sign-in in production end to end. Blocked while Pangolin's own PIN sits in
+  front of the resource: an OIDC provider behind a second login breaks both
+  Google's callback and a relying party's server-side discovery. Once it serves
+  unauthenticated, walk sign-in into noted and out through `/oauth/logout`.
 - The revoked and non-allowlisted paths against *Google* rather than the dev
   picker. The happy path has been walked with real credentials.
-- Deployment. No Capistrano config, no Pangolin resource, no launchd label.
 - Nothing outstanding in the handshake itself: noted has verified an
   auth-issued token, and a real back-channel logout was delivered end to end
   (`delivered`, HTTP 200) on 19 Aug.

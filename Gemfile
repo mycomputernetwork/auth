@@ -6,6 +6,7 @@ gem "rails", "~> 8.1.3", ">= 8.1.3.1"
 gem "propshaft"
 gem "sqlite3", ">= 2.1"
 gem "puma", ">= 5.0"
+gem "rack-attack", "~> 6.7"
 gem "bootsnap", require: false
 
 gem "doorkeeper", "~> 5.8"
