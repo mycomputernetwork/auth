@@ -1,5 +1,8 @@
 module Oauth
   class EndSessionsController < ApplicationController
+    # Signing out must work even for someone who owes us a password.
+    skip_before_action :require_own_password
+
     def show
       end_session = EndSession.new(params)
       sign_out if current_session && end_session.ends?(current_session)

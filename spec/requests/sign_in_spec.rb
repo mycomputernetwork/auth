@@ -30,6 +30,14 @@ RSpec.describe "Signing in with Google" do
     expect(response).to redirect_to("/sign_in")
   end
 
+  it "turns away an address Google has not verified, even when it is allowlisted" do
+    AllowedEmail.create!(email: "dev1@example.com")
+
+    expect { callback(google_auth(email: "dev1@example.com", unverified: true)) }
+      .not_to change(User, :count)
+    expect(response).to redirect_to("/sign_in")
+  end
+
   it "keeps the identity when a Google account is re-linked" do
     AllowedEmail.create!(email: "dev1@example.com")
     callback(google_auth(email: "dev1@example.com", uid: "old-sub"))

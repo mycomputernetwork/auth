@@ -24,6 +24,44 @@ time they arrive.
 The allowlist is checked on **sign-in only**. Adding an address lets someone in;
 removing one does not put anybody out. That is what revocation is for.
 
+## Passwords
+
+Google is the usual way in; a password is for people Google cannot serve. Both
+land on the same account, keyed by email, and both are refused unless the
+address is on the allowlist.
+
+```bash
+bin/rails "auth:set_password[someone@example.com]"
+```
+
+That prints a **one-time** password — hand it over out of band. It creates the
+account if it does not exist yet, so a password-only person never needs Google.
+Passing one yourself is `auth:set_password[someone@example.com,their-password]`.
+
+The password you issue is not the password they keep. Their first sign-in lands
+on `/password` and goes no further until they pick their own — not the apps, not
+even an `/oauth/authorize` a client started. After that you do not know their
+password, and `password_changed_at` says when they picked it. Twelve characters
+minimum; they can come back to `/password` any time to change it again.
+
+**Forgotten passwords are resets.** auth sends no email, so there is no reset
+link and no self-service: the person asks, you run the same task again, and they
+are handed another one-time password to replace. Setting one does not end their
+live sessions — do that by hand if the old one may have leaked:
+
+```ruby
+User.find_by(email: "someone@example.com").sessions.destroy_all
+```
+
+Taking the password away, leaving only Google:
+
+```bash
+bin/rails "auth:clear_password[someone@example.com]"
+```
+
+Password attempts are throttled with the rest of `/sign_in`: 20 a minute per
+address.
+
 ## Putting someone out
 
 ```ruby
@@ -59,6 +97,8 @@ Their old tokens stay dead; they sign in again from scratch.
 
 ```ruby
 User.pluck(:email, :revoked_at)                      # who exists, who is out
+User.where.not(password_digest: nil).pluck(:email, :password_changed_at)
+# a nil password_changed_at is someone still holding the password you issued
 AllowedEmail.pluck(:email)                           # who may enter
 Session.joins(:user).pluck("users.email", :last_seen_at, :ip_address)
 Doorkeeper::Application.pluck(:name, :uid, :confidential)
@@ -91,6 +131,9 @@ Paste the printed uid and secret into that app's credentials. Native clients get
 - **"That account is not allowed to sign in"** — no `AllowedEmail` row. auth
   reached Google fine; this is auth's own refusal.
 - **"That account's access has been revoked"** — `revoked_at` is set.
+- **"That email and password did not match"** — wrong password, no password set
+  on that account, or the address is not allowlisted. The message does not say
+  which, on purpose; check with the queries above.
 - **An app keeps redirecting to auth** — its client uid or secret no longer
   matches `oauth_applications`. Re-register it.
 - **An app signs people out constantly** — its clock is off, or it is verifying

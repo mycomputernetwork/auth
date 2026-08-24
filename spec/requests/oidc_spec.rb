@@ -87,6 +87,16 @@ RSpec.describe "The OIDC provider" do
     expect(response).to redirect_to("/sign_in")
   end
 
+  it "returns to the authorize request it interrupted once they sign in" do
+    authorize = "/oauth/authorize?client_id=#{application.uid}&redirect_uri=#{CGI.escape(application.redirect_uri)}" \
+                "&response_type=code&scope=openid&code_challenge=#{challenge}&code_challenge_method=S256"
+    get authorize
+
+    sign_in
+
+    expect(response).to redirect_to(authorize)
+  end
+
   it "sends a client that names Google straight to Google" do
     allow(Rails.env).to receive(:local?).and_return(false)
 

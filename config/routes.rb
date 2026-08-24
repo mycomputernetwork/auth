@@ -8,9 +8,13 @@ Rails.application.routes.draw do
   root "home#show"
 
   get "sign_in", to: "sessions#new", as: :sign_in
+  post "sign_in", to: "sessions#password"
   match "auth/google_oauth2/callback", to: "sessions#create", via: %i[get post]
   get "auth/failure", to: "sessions#failure"
   delete "logout", to: "sessions#destroy", as: :logout
+
+  get "password", to: "passwords#edit", as: :edit_password
+  patch "password", to: "passwords#update"
 
   if Rails.env.local?
     get "dev/sign_in", to: "dev/sessions#new", as: :dev_sign_in

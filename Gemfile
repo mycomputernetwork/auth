@@ -8,6 +8,7 @@ gem "sqlite3", ">= 2.1"
 gem "puma", ">= 5.0"
 gem "rack-attack", "~> 6.7"
 gem "bootsnap", require: false
+gem "bcrypt", "~> 3.1"
 
 gem "doorkeeper", "~> 5.8"
 gem "doorkeeper-openid_connect", "~> 1.8"

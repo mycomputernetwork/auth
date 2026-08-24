@@ -20,6 +20,9 @@ RSpec.configure do |config|
   config.after { OmniAuth.config.mock_auth.clear }
 end
 
-def google_auth(email:, uid: "google-#{email}", name: "Test User")
-  OmniAuth::AuthHash.new(provider: "google_oauth2", uid: uid, info: { email: email, name: name })
+# omniauth-google-oauth2 puts the address in `email` only when Google reports it
+# verified, and leaves it nil otherwise. `unverified: true` reproduces that.
+def google_auth(email:, uid: "google-#{email}", name: "Test User", unverified: false)
+  info = { email: unverified ? nil : email, unverified_email: email, name: name }
+  OmniAuth::AuthHash.new(provider: "google_oauth2", uid: uid, info: info)
 end

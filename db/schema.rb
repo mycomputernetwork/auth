@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_20_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_21_000002) do
   create_table "allowed_emails", id: :string, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
@@ -100,6 +100,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_20_150000) do
     t.string "email", null: false
     t.string "google_sub"
     t.string "name"
+    t.datetime "password_changed_at"
+    t.string "password_digest"
     t.datetime "revoked_at"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true

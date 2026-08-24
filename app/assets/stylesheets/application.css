@@ -149,6 +149,39 @@ main {
 
 form { margin: 0; }
 
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: left;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.field label {
+  font-size: var(--size-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.field input {
+  width: 100%;
+  font: inherit;
+  font-size: var(--size-sm);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+
+.field input:focus { outline: 1px solid var(--text-dim); }
+
 .divider {
   display: flex;
   align-items: center;
@@ -194,6 +227,13 @@ form { margin: 0; }
 
 .footnote a { color: var(--text); text-decoration: none; }
 .footnote a:hover { text-decoration: underline; }
+
+.footnote summary {
+  cursor: pointer;
+  color: var(--text);
+}
+
+.footnote[open] summary { margin-bottom: var(--space-2); }
 
 .flash {
   width: 100%;

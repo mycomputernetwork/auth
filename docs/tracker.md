@@ -47,6 +47,28 @@ flow is a GET (`allowed_request_methods = [:get]`, request validation off); the
 callback still verifies `state`, so a forged start cannot become a session.
 Development ignores the hint so the dev picker stays reachable.
 
+**Passwords sit beside Google**, added 21 Aug. `POST /sign_in` with an email and
+password, `has_secure_password` over `users.password_digest`, refused unless the
+address is allowlisted and the account is not revoked. Same account either way —
+email is the key — so a person can hold both. There is no reset flow and no
+sign-up: auth cannot send email, so `auth:set_password` is an administrator
+handing out a generated password, documented in the handbook.
+
+**An issued password is one-time.** `auth:set_password` leaves
+`password_changed_at` nil, and `require_own_password` holds anyone in that state
+on `/password` — it is a `before_action` on `ApplicationController`, so it covers
+Doorkeeper's own controllers too and an interrupted `/oauth/authorize` resumes
+after they pick one. Sign-out and the end-session endpoint skip it, because
+leaving must never be blocked; the token endpoint is metal and never had it.
+
+**Signing in rotates the Rails session**, carrying `return_to` across by hand.
+That hand-off is the whole reason an interrupted `/oauth/authorize` still
+resumes, and `oidc_spec` holds it down — drop the carry and that spec fails.
+
+**A failed password attempt re-renders `/sign_in` with 422**, keeping the
+address they typed and focusing the password field, rather than redirecting to
+an empty form.
+
 **Rate limiting is `rack-attack`**, per-process `MemoryStore`. Sign-in, the
 Google callback and `/oauth/authorize` by address; the token endpoint by
 `client_id`, so one client's flood cannot lock out another. Discovery, the JWKS
@@ -57,6 +79,19 @@ a token. Over the limit is 429 with `retry-after`.
 
 - The revoked and non-allowlisted paths have only been walked against the dev
   picker, not a real Google account.
+- A Google address moving onto an address auth already holds as a separate user
+  is a 500, not a refusal: the lookup matches on `google_sub` and then overwrites
+  `email` into the unique index. Needs two rows and a rename to reach.
+- Unverified Google addresses are refused, but only because the strategy nils
+  `info.email` unless Google says verified — `spec/requests/sign_in_spec.rb`
+  holds that down. Never read `info.unverified_email`.
+- Nothing bounds wrong password guesses per account — only the 20-a-minute
+  `/sign_in` throttle per address, which many addresses get around. A per-account
+  throttle is the next thing to add here.
+- Nothing expires a password once chosen, and a leaked one is only replaceable by
+  an administrator issuing another.
+- Password sign-in and the forced change have request specs but have never been
+  walked in production; nobody there has a password yet.
 - Delivery is synchronous and unretried: a slow app blocks the logout request
   for up to 5 seconds, and a failed delivery is recorded but never retried.
 - The issuer is fixed per environment while Doorkeeper derives endpoint URLs
@@ -81,6 +116,12 @@ Run `bin/rails server -p 3001`, then:
 4. `/dev/sign_in` → **Not Invited** → refused, "Not on the allowlist."
 5. `/dev/sign_in` → **Revoked Member** → refused, "Access revoked."
 6. `/dev/sign_in` returns 404 with `RAILS_ENV=production`.
+6b. `bin/rails "auth:set_password[dev1@example.com]"`, then sign in with that
+   email and the printed password on `/sign_in`. A wrong password is refused
+   with "That email and password did not match.", keeping the address typed.
+6c. That sign-in lands on `/password` and `/` will not open until a new password
+   is saved; the old one no longer signs in, and `/password` is reachable again
+   afterwards for a voluntary change.
 7. `/.well-known/openid-configuration` and `/oauth/discovery/keys` both
    return JSON; the JWKS carries only `kty/use/alg/kid/n/e`.
 8. Signed out, hitting `/oauth/authorize?client_id=noted-development&…`

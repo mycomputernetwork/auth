@@ -84,6 +84,7 @@ GEM
     auth-sanitizer (0.2.3)
       version_gem (~> 1.1, >= 1.1.14)
     base64 (0.3.0)
+    bcrypt (3.1.22)
     bigdecimal (4.1.2)
     bootsnap (1.25.0)
       msgpack (~> 1.5)
@@ -354,6 +355,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  bcrypt (~> 3.1)
   bootsnap
   capistrano (~> 3.19)
   capistrano-bundler (~> 2.1)

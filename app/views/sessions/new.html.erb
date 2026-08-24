@@ -9,8 +9,32 @@
       <path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.93a9 9 0 0 0 0 8.1l3.04-2.33Z"/>
       <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59C13.46.9 11.43 0 9 0A9 9 0 0 0 .93 4.95l3.04 2.33C4.68 5.16 6.66 3.58 9 3.58Z"/>
     </svg>
-    Login with Google
+    Sign in with Google
   <% end %>
+
+  <p class="divider">or</p>
+
+  <%= form_with url: sign_in_path, method: :post, class: "password-form" do |form| %>
+    <div class="field">
+      <%= form.label :email, "Email" %>
+      <%= form.email_field :email, value: @email, autocomplete: "username", required: true,
+                                   autofocus: @email.blank? %>
+    </div>
+
+    <div class="field">
+      <%= form.label :password, "Password" %>
+      <%= form.password_field :password, autocomplete: "current-password", required: true,
+                                         autofocus: @email.present? %>
+    </div>
+
+    <%= form.submit "Sign in", class: "button" %>
+  <% end %>
+
+  <details class="footnote">
+    <summary>Forgotten your password?</summary>
+    Ask your administrator to reset it. They will hand you a new one to sign in
+    with once, and you pick your own from there.
+  </details>
 
   <% if Rails.env.local? %>
     <p class="footnote"><%= link_to "Development sign-in", dev_sign_in_path %></p>
