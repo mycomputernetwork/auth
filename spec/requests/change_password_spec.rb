@@ -74,6 +74,27 @@ RSpec.describe "Changing a password" do
     end
   end
 
+  it "names the account in the form so a password manager files it correctly" do
+    User.create!(email: "dev1@example.com", password: "the one they chose", password_changed_at: 1.day.ago)
+    sign_in_with("the one they chose")
+
+    get "/password"
+    expect(response.body).to include('autocomplete="username"', 'value="dev1@example.com"')
+  end
+
+  it "changes the signed-in account whatever address the form carries" do
+    User.create!(email: "dev1@example.com", password: "issued-by-admin")
+    other = User.create!(email: "someone-else@example.com", password: "theirs to keep")
+    sign_in_with("issued-by-admin")
+
+    patch "/password", params: {
+      email: other.email, password: "a phrase they chose", password_confirmation: "a phrase they chose"
+    }
+
+    expect(other.reload.authenticate("theirs to keep")).to be_truthy
+    expect(User.find_by(email: "dev1@example.com").authenticate("a phrase they chose")).to be_truthy
+  end
+
   it "leaves a Google-only account alone" do
     post "/dev/sign_in", params: { email: "dev1@example.com" }
 

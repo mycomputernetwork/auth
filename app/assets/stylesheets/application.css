@@ -158,6 +158,19 @@ form { margin: 0; }
 
 .password-form [type="submit"] { margin-top: var(--space-3); }
 
+/* Out of sight but still in the layout: display:none is skipped by the
+   password managers this is here for. */
+.offscreen {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+}
+
 /* No divider overhead to separate it from the heading, so it carries its own. */
 .password-form--standalone {
   margin-top: var(--space-7);

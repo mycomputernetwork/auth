@@ -5,6 +5,10 @@
   <p class="card__subtitle"><%= @user.email %></p>
 
   <%= form_with url: edit_password_path, method: :patch, class: "password-form password-form--standalone" do |form| %>
+    <%# Password managers file the new secret under whoever this says it is. %>
+    <%= form.email_field :email, value: @user.email, autocomplete: "username",
+                                 readonly: true, tabindex: -1, class: "offscreen" %>
+
     <div class="field">
       <%= form.label :password, "New password" %>
       <%= form.password_field :password, autocomplete: "new-password", required: true, autofocus: true %>
