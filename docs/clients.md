@@ -78,6 +78,17 @@ access token immediately. A refresh by a revoked user is rejected with
 `invalid_grant`, which is what makes the 15-minute access token TTL the real
 bound on revocation.
 
+## Passwords
+
+Some people sign in with a password auth holds rather than with Google. Nothing
+about this reaches a client: the same authorization code arrives, carrying the
+same claims, and `sub` is the same account whichever way its owner arrived.
+
+One consequence worth knowing. An administrator-issued password is one-time, and
+auth holds its owner on its own `/password` page until they choose another —
+including when they are midway through your authorization request. The request
+resumes afterwards and your callback sees nothing unusual, only a slower human.
+
 ## Skipping auth's sign-in page
 
 Add `idp=google` to the authorization request and an unauthenticated visitor is
@@ -90,6 +101,12 @@ redirected to Google rather than to auth's own page:
 Ordinary redirects, no page rendered in between. Any other value, or none, lands
 on `/sign_in` as before. Development ignores the hint and keeps the picker,
 which is the only way to sign in on a machine with no Google credentials.
+
+**Send it only if Google is the only way your people arrive.** auth also signs
+people in with a password, and the hint skips past the page offering it. noted
+sends no hint for exactly this reason: which method someone uses is auth's
+question to ask, and an app that hardcodes `idp=google` puts every password
+account out of its own reach.
 
 Starting a sign-in is a GET, so a link on another site can begin this flow. It
 cannot finish one: the callback checks `state` against auth's session, so a
