@@ -1,14 +1,10 @@
 <div class="card">
   <%= image_tag "logo.jpg", alt: "", class: "card__logo" %>
 
-  <% if @user.must_change_password? %>
-    <h1 class="card__title">Pick your own password</h1>
-    <p class="card__subtitle">The one you were given was chosen by an administrator, who still knows it.</p>
-  <% else %>
-    <h1 class="card__title">Change your password</h1>
-  <% end %>
+  <h1 class="card__title">Change your password</h1>
+  <p class="card__subtitle"><%= @user.email %></p>
 
-  <%= form_with url: edit_password_path, method: :patch, class: "password-form" do |form| %>
+  <%= form_with url: edit_password_path, method: :patch, class: "password-form password-form--standalone" do |form| %>
     <div class="field">
       <%= form.label :password, "New password" %>
       <%= form.password_field :password, autocomplete: "new-password", required: true, autofocus: true %>

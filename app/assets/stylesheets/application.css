@@ -156,6 +156,14 @@ form { margin: 0; }
   text-align: left;
 }
 
+.password-form [type="submit"] { margin-top: var(--space-3); }
+
+/* No divider overhead to separate it from the heading, so it carries its own. */
+.password-form--standalone {
+  margin-top: var(--space-7);
+  gap: var(--space-5);
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -228,12 +236,20 @@ form { margin: 0; }
 .footnote a { color: var(--text); text-decoration: none; }
 .footnote a:hover { text-decoration: underline; }
 
-.footnote summary {
-  cursor: pointer;
-  color: var(--text);
+/* One line either way, so revealing the answer does not resize the card. */
+.reveal {
+  height: 1.5em;
+  height: 1lh;
+  overflow: hidden;
 }
 
-.footnote[open] summary { margin-bottom: var(--space-2); }
+.reveal summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.reveal summary::-webkit-details-marker { display: none; }
+.reveal[open] summary { display: none; }
 
 .flash {
   width: 100%;
