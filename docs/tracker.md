@@ -1,6 +1,6 @@
 # Tracker
 
-_Last handoff: 20 Aug 2026._
+_Last handoff: 25 Aug 2026._
 
 ## Status
 
@@ -36,15 +36,6 @@ code works locally.
 
 Seeded by hand in production: the allowlist entry, and noted's client with
 `post_logout_redirect_uri` `https://noted.prabhanshugupta.com/sign_in`.
-
-**Walked on 20 Aug.** A real Google identity signed into noted through auth and
-out again via `/oauth/logout`: the fan-out recorded `delivered`, the access token
-was revoked, and both session rows disappeared.
-
-**Walked on 24 Aug.** A one-time password issued on the server signed into
-noted through auth: held on `/password` until it was replaced, then returned to
-the board it had asked for. The issued password no longer works, and the same
-account still signs in with Google.
 
 **`idp=google` skips auth's sign-in page.** An unauthenticated visitor whose
 client names Google is redirected there, no page rendered in between. Starting a
@@ -135,7 +126,7 @@ Run `bin/rails server -p 3001`, then:
 9. `/oauth/logout?client_id=noted-development&post_logout_redirect_uri=http://localhost:3000/sign_in`
    ends the session and returns to noted; the same URL with any other
    `post_logout_redirect_uri` lands on auth's own `/sign_in` instead.
-10. After that, sign out and check `LogoutDelivery.last` — with no app running
+10. After that, sign out and check `LogoutDelivery.order(:created_at).last` — with no app running
    at :3000 it records `failed`, and the sign-out still completes.
 
 ## Operations
