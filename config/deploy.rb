@@ -9,7 +9,7 @@ set :branch, "main"
 append :linked_files, "config/master.key", "config/credentials.yml.enc"
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "db_data"
 
-set :keep_releases, 5
+set :keep_releases, 2
 
 set :mise_ruby_version, "3.4.10"
 
