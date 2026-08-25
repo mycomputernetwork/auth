@@ -29,6 +29,11 @@ Rails.application.configure do
   # Only serve requests for the deployed host; reject anything else (DNS rebinding).
   config.hosts = ["auth.mycomputer.network"]
 
+  # The proxy health-checks the target by IP, so its probe carries Host: 127.0.0.1
+  # and host authorization would 403 it. A failing probe withdraws the backend and
+  # takes the whole hostname offline, cert included.
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [ :request_id ]
   config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
