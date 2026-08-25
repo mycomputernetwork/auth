@@ -1,10 +1,10 @@
 # Working in this repo
 
-`auth` is the OIDC provider for the mycomputer.network fleet — the only service
-that talks to Google, the only place an allowlist is enforced, and the only
-place a person can be revoked across every app at once. Rails 8, SQLite, no
-Node. Runs on port 3001, deployed to `~/services/auth`, served at
-`auth.mycomputer.network`.
+`auth` is the OIDC provider for the fleet — the only service that talks to
+Google, the only place an allowlist is enforced, and the only place a person can
+be revoked across every app at once. Rails 8, SQLite, no Node.
+Developed at `~/work/services/auth`, runs on port 3001, deployed to
+`~/services/auth` on dabba, served at `auth.prabhanshugupta.com`.
 
 ## Read these first, in order
 

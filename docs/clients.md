@@ -18,7 +18,7 @@ clone of either repo works without the two databases knowing about each other.
 Production, on dabba:
 
 ```bash
-bin/rails "auth:register_client[noted,https://noted.mycomputer.network]"
+bin/rails "auth:register_client[noted,https://noted.prabhanshugupta.com]"
 bin/rails "auth:register_native_client[noted-android,network.mycomputer.noted://oauth/callback]"
 ```
 
@@ -47,7 +47,7 @@ to a resource server:
 - `/oauth/token` — code exchange and refresh.
 - `/oauth/logout` — RP-initiated logout, for the browser.
 
-The issuer is `https://auth.mycomputer.network` in production and
+The issuer is `https://auth.prabhanshugupta.com` in production and
 `http://localhost:3001` in development. Verify it: it is the `iss` claim on
 every token below.
 

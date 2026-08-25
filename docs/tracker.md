@@ -23,7 +23,7 @@ integer keys the gem ships with; only `resource_owner_id` is a string.
 
 ## Production
 
-Served at `https://auth.mycomputer.network` through Pangolin, from Puma on
+Served at `https://auth.prabhanshugupta.com` through Pangolin, from Puma on
 loopback `3001` on dabba. Capistrano mirrors noted's setup one port over:
 launchd label `com.auth.app`, `AUTH_DB_PATH` into `database.yml`,
 `cap production auth:restart`.
@@ -35,11 +35,16 @@ verify. Suspect this first if a Google callback fails on the server but the same
 code works locally.
 
 Seeded by hand in production: the allowlist entry, and noted's client with
-`post_logout_redirect_uri` `https://noted.mycomputer.network/sign_in`.
+`post_logout_redirect_uri` `https://noted.prabhanshugupta.com/sign_in`.
 
 **Walked on 20 Aug.** A real Google identity signed into noted through auth and
 out again via `/oauth/logout`: the fan-out recorded `delivered`, the access token
 was revoked, and both session rows disappeared.
+
+**Walked on 24 Aug.** A one-time password issued on the server signed into
+noted through auth: held on `/password` until it was replaced, then returned to
+the board it had asked for. The issued password no longer works, and the same
+account still signs in with Google.
 
 **`idp=google` skips auth's sign-in page.** An unauthenticated visitor whose
 client names Google is redirected there, no page rendered in between. Starting a
@@ -90,8 +95,6 @@ a token. Over the limit is 429 with `retry-after`.
   throttle is the next thing to add here.
 - Nothing expires a password once chosen, and a leaked one is only replaceable by
   an administrator issuing another.
-- Password sign-in and the forced change have request specs but have never been
-  walked in production; nobody there has a password yet.
 - Delivery is synchronous and unretried: a slow app blocks the logout request
   for up to 5 seconds, and a failed delivery is recorded but never retried.
 - The issuer is fixed per environment while Doorkeeper derives endpoint URLs
@@ -99,7 +102,7 @@ a token. Over the limit is 429 with `retry-after`.
   a discovery document that disagrees with itself.
 - While Google's consent screen is in Testing, a new person needs two entries: a
   Google test user and an `AllowedEmail`. Redirect URIs are registered for both
-  `http://localhost:3001` and `https://auth.mycomputer.network`.
+  `http://localhost:3001` and `https://auth.prabhanshugupta.com`.
 
 Run `bin/rails db:seed` after pulling: the dev client needs its
 `post_logout_redirect_uri` (`http://localhost:3000/sign_in`), and without it a

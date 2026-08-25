@@ -1,7 +1,7 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  config.x.issuer = "https://auth.mycomputer.network"
+  config.x.issuer = "https://auth.prabhanshugupta.com"
 
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -27,7 +27,7 @@ Rails.application.configure do
   config.force_ssl = true
 
   # Only serve requests for the deployed host; reject anything else (DNS rebinding).
-  config.hosts = ["auth.mycomputer.network"]
+  config.hosts = ["auth.prabhanshugupta.com"]
 
   # The proxy health-checks the target by IP, so its probe carries Host: 127.0.0.1
   # and host authorization would 403 it. A failing probe withdraws the backend and

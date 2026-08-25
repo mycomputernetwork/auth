@@ -118,11 +118,33 @@ User.find_by(email: "someone@example.com").sessions.destroy_all
 See `docs/clients.md`. Short version:
 
 ```bash
-bin/rails "auth:register_client[chat,https://chat.mycomputer.network]"
+bin/rails "auth:register_client[chat,https://chat.prabhanshugupta.com]"
 ```
 
 Paste the printed uid and secret into that app's credentials. Native clients get
 `auth:register_native_client` and no secret.
+
+## Moving an app to a new domain
+
+`auth:register_client` creates, so running it again mints a second client with a
+new uid and secret and the app would need its credentials rewritten too. To keep
+the existing uid and secret, update the three URIs in place:
+
+```bash
+bin/rails runner '
+  base = "https://noted.prabhanshugupta.com"
+  app = Doorkeeper::Application.find_by!(name: "noted")
+  app.update!(
+    redirect_uri: "#{base}/auth/oidc/callback",
+    backchannel_logout_uri: "#{base}/auth/backchannel_logout",
+    post_logout_redirect_uri: "#{base}/sign_in"
+  )
+  puts app.reload.attributes.slice(*%w[name redirect_uri backchannel_logout_uri post_logout_redirect_uri])
+'
+```
+
+Deploy auth before the app that depends on it, so the new issuer and JWKS are
+reachable when the app first tries discovery.
 
 ## When sign-in breaks
 
