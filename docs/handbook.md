@@ -5,21 +5,13 @@ Everything you do to auth after it is deployed. There is no admin UI: these are
 
 ## Letting someone in
 
-Two lists, and while the Google consent screen is in Testing mode a person
-needs to be on both.
-
-1. **Google**, once per person: Cloud console → APIs & Services → OAuth consent
-   screen → **Test users** → add their address. Skipping this means Google
-   refuses before auth ever sees them (`access_denied`).
-2. **auth**, once per person:
-
 ```ruby
 AllowedEmail.create!(email: "someone@example.com")
 ```
 
 They sign in at any app in the fleet; auth creates the account on first
-callback. Nothing to do in noted or chat — an account appears there the first
-time they arrive.
+callback. Nothing to do in noted — an account appears there the first time they
+arrive.
 
 The allowlist is checked on **sign-in only**. Adding an address lets someone in;
 removing one does not put anybody out. That is what revocation is for.

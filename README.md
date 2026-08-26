@@ -1,8 +1,7 @@
 # auth
 
-The OIDC provider for the fleet. One service talks to Google; `noted`,
-`chat`, and the native clients trust it and verify its tokens against a
-published JWKS.
+The OIDC provider for the fleet. One service talks to Google; `noted` and the
+native clients trust it and verify its tokens against a published JWKS.
 
 Rails 8, SQLite, no Node. Runs on port 3001, served at
 `auth.prabhanshugupta.com`.

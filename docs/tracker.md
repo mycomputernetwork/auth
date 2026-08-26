@@ -91,9 +91,8 @@ a token. Over the limit is 429 with `retry-after`.
 - The issuer is fixed per environment while Doorkeeper derives endpoint URLs
   from the request, so running on a port other than 3001 in development produces
   a discovery document that disagrees with itself.
-- While Google's consent screen is in Testing, a new person needs two entries: a
-  Google test user and an `AllowedEmail`. Redirect URIs are registered for both
-  `http://localhost:3001` and `https://auth.prabhanshugupta.com`.
+- Redirect URIs are registered for both `http://localhost:3001` and
+  `https://auth.prabhanshugupta.com`.
 
 Run `bin/rails db:seed` after pulling: the dev client needs its
 `post_logout_redirect_uri` (`http://localhost:3000/sign_in`), and without it a
