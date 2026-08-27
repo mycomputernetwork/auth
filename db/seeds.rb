@@ -14,7 +14,8 @@ if Rails.env.local?
   native.update!(
     name: "noted native (development)",
     secret: nil,
-    redirect_uri: "network.mycomputer.noted://oauth/callback",
+    redirect_uri: "com.prabhanshugupta.noted://oauth/callback",
+    post_logout_redirect_uri: "com.prabhanshugupta.noted://oauth/logout",
     scopes: "openid email profile offline_access",
     confidential: false
   )

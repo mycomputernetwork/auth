@@ -19,7 +19,7 @@ Production, on dabba:
 
 ```bash
 bin/rails "auth:register_client[noted,https://noted.prabhanshugupta.com]"
-bin/rails "auth:register_native_client[noted-android,network.mycomputer.noted://oauth/callback]"
+bin/rails "auth:register_native_client[noted-android,com.prabhanshugupta.noted://oauth/callback]"
 ```
 
 The first prints a uid and secret to paste into that app's credentials, and
@@ -33,7 +33,18 @@ derives two URLs the app must serve:
 
 The second registers a public client: no secret, because an APK or an app
 bundle cannot keep one. PKCE is what replaces it, and auth requires PKCE of
-every client, confidential ones included.
+every client, confidential ones included. Its uid is the name it was given, so
+it can be compiled into a build config before it is registered; the redirect URI
+is the app's reverse-DNS scheme.
+
+A native client also gets a `post_logout_redirect_uri` of `<scheme>://oauth/logout`.
+Signing out on a phone ends this browser's session like any other RP-initiated
+logout, and `EndSession` only redirects back to a URI the client has registered.
+
+An app with a native companion is therefore two clients, and its tokens carry
+two different `aud` values. **The resource server must accept both** — in noted,
+`AuthService.audiences`. A token minted for a native client is still that app's
+token.
 
 There is no registration UI, and no dynamic registration. Five apps, each
 registered once.

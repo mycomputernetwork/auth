@@ -217,7 +217,7 @@ RSpec.describe "A public native client" do
   let(:application) do
     Doorkeeper::Application.create!(
       name: "noted android", uid: "noted-android", secret: nil,
-      redirect_uri: "network.mycomputer.noted://oauth/callback",
+      redirect_uri: "com.prabhanshugupta.noted://oauth/callback",
       scopes: "openid email offline_access", confidential: false
     )
   end
