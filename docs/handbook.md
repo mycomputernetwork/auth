@@ -114,7 +114,18 @@ bin/rails "auth:register_client[chat,https://chat.prabhanshugupta.com]"
 ```
 
 Paste the printed uid and secret into that app's credentials. Native clients get
-`auth:register_native_client` and no secret.
+`auth:register_native_client` and no secret — their uid is the name they were
+given, so the downstream app can be built before it is registered.
+
+On dabba, any task needs the database path as well as the environment:
+
+```bash
+cd ~/services/auth/current
+RAILS_ENV=production AUTH_DB_PATH=~/services/auth/shared/db_data bin/rails "auth:register_native_client[...]"
+```
+
+Without `AUTH_DB_PATH` the task opens an empty sqlite file inside the release
+directory and fails on a missing table, having written a decoy next to the code.
 
 ## Moving an app to a new domain
 
