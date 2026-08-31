@@ -203,6 +203,15 @@ form { margin: 0; }
 
 .field input:focus { outline: 1px solid var(--text-dim); }
 
+.field input:-webkit-autofill,
+.field input:-webkit-autofill:hover,
+.field input:-webkit-autofill:focus,
+.field input:autofill {
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--text);
+  box-shadow: 0 0 0 1000px var(--surface) inset;
+}
+
 .divider {
   display: flex;
   align-items: center;
