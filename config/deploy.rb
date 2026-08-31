@@ -14,7 +14,7 @@ set :keep_releases, 2
 set :mise_ruby_version, "3.4.10"
 
 set :default_env, {
-  "PATH" => "$HOME/.local/share/mise/shims:$PATH",
+  "PATH" => "$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH",
   "RAILS_ENV" => "production",
   "AUTH_DB_PATH" => "/Users/prabhanshu/services/auth/shared/db_data",
   "RAILS_LOG_TO_STDOUT" => "true",
