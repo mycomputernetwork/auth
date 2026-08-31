@@ -1,6 +1,6 @@
 # Tracker
 
-_Last handoff: 25 Aug 2026._
+_Last handoff: 31 Aug 2026._
 
 ## Status
 
@@ -63,7 +63,8 @@ resumes, and `oidc_spec` holds it down — drop the carry and that spec fails.
 
 **A failed password attempt re-renders `/sign_in` with 422**, keeping the
 address they typed and focusing the password field, rather than redirecting to
-an empty form.
+an empty form. Autofilled sign-in and password fields keep the dark theme rather
+than taking the browser's autofill background.
 
 **Rate limiting is `rack-attack`**, per-process `MemoryStore`. Sign-in, the
 Google callback and `/oauth/authorize` by address; the token endpoint by
