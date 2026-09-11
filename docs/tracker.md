@@ -1,6 +1,6 @@
 # Tracker
 
-_Last handoff: 31 Aug 2026._
+_Last handoff: 11 Sep 2026._
 
 ## Status
 
@@ -23,7 +23,7 @@ integer keys the gem ships with; only `resource_owner_id` is a string.
 
 ## Production
 
-Served at `https://auth.prabhanshugupta.com` through Pangolin, from Puma on
+Served at `https://auth.apps.prabhanshugupta.com` through Pangolin, from Puma on
 loopback `3001` on dabba. Capistrano mirrors noted's setup one port over:
 launchd label `com.auth.app`, `AUTH_DB_PATH` into `database.yml`,
 `cap production auth:restart`.
@@ -35,7 +35,7 @@ verify. Suspect this first if a Google callback fails on the server but the same
 code works locally.
 
 Seeded by hand in production: the allowlist entry, and noted's client with
-`post_logout_redirect_uri` `https://noted.prabhanshugupta.com/sign_in`.
+`post_logout_redirect_uri` `https://noted.apps.prabhanshugupta.com/sign_in`.
 
 **`idp=google` skips auth's sign-in page.** An unauthenticated visitor whose
 client names Google is redirected there, no page rendered in between. Starting a
@@ -93,7 +93,7 @@ a token. Over the limit is 429 with `retry-after`.
   from the request, so running on a port other than 3001 in development produces
   a discovery document that disagrees with itself.
 - Redirect URIs are registered for both `http://localhost:3001` and
-  `https://auth.prabhanshugupta.com`.
+  `https://auth.apps.prabhanshugupta.com`.
 
 Run `bin/rails db:seed` after pulling: the dev client needs its
 `post_logout_redirect_uri` (`http://localhost:3000/sign_in`), and without it a

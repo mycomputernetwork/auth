@@ -110,7 +110,7 @@ User.find_by(email: "someone@example.com").sessions.destroy_all
 See `docs/clients.md`. Short version:
 
 ```bash
-bin/rails "auth:register_client[chat,https://chat.prabhanshugupta.com]"
+bin/rails "auth:register_client[chat,https://chat.apps.prabhanshugupta.com]"
 ```
 
 Paste the printed uid and secret into that app's credentials. Native clients get
@@ -135,7 +135,7 @@ the existing uid and secret, update the three URIs in place:
 
 ```bash
 bin/rails runner '
-  base = "https://noted.prabhanshugupta.com"
+  base = "https://noted.apps.prabhanshugupta.com"
   app = Doorkeeper::Application.find_by!(name: "noted")
   app.update!(
     redirect_uri: "#{base}/auth/oidc/callback",
